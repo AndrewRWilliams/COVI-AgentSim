@@ -535,6 +535,7 @@ def run(data, path, compare="app_adoption"):
     # link full keys (that specify params like APP_UPTAKE)
     # to shorthand (e.g. "bdt1")
     method_keys = get_daly_df_keys(agg_daly_df=agg_daly_df)
+    print(method_keys)
 
     # generate figure 9
     plot_dalys_tpl(agg_daly_mean=agg_daly_mean,
