@@ -93,60 +93,66 @@ def get_daly_data(demographics,
                 "life_expectancy",
     """
 
-    human_names = [human_monitor_data[datetime.date(2020, 2, 28)][i]['name']
-                   for i in range(len(
-                       human_monitor_data[datetime.date(2020, 2, 28)]
-                                      )
-                                  )
-                   ]
+    # human_names = [human_monitor_data[datetime.date(2020, 2, 28)][i]['name']
+    #                for i in range(len(
+    #                    human_monitor_data[datetime.date(2020, 2, 28)]
+    #                                   )
+    #                               )
+    #                ]
 
-    symptom_status = {i: {} for i in human_names}
-    hospitalization_status = {i: {} for i in human_names}
-    ICU_status = {i: {} for i in human_names}
-    death_status = {i: {} for i in human_names}
-    outpatient_status = {i: {} for i in human_names}
-    has_had_infection = {i: {} for i in human_names}
+    # symptom_status = {i: {} for i in human_names}
+    # hospitalization_status = {i: {} for i in human_names}
+    # ICU_status = {i: {} for i in human_names}
+    # death_status = {i: {} for i in human_names}
+    # outpatient_status = {i: {} for i in human_names}
+    # has_had_infection = {i: {} for i in human_names}
 
-    days_in_hospital = {}
-    days_in_ICU = {}
-    has_died = {}
-    days_with_symptoms = {}
-    days_as_outpatient = {}
-    was_infected = {}
+    # days_in_hospital = {}
+    # days_in_ICU = {}
+    # has_died = {}
+    # days_with_symptoms = {}
+    # days_as_outpatient = {}
+    # was_infected = {}
 
-    for day in human_monitor_data.keys():
-        for human in range(len(
-            human_monitor_data[datetime.date(2020, 2, 28)]
-                               )
-                           ):
+    # for day in human_monitor_data.keys():
+    #     for human in range(len(
+    #         human_monitor_data[datetime.date(2020, 2, 28)]
+    #                            )
+    #                        ):
 
-            human_name = human_monitor_data[day][human]['name']
-            is_in_hospital = human_monitor_data[day][human]['is_in_hospital']
-            is_in_ICU = human_monitor_data[day][human]['is_in_ICU']
-            is_dead = human_monitor_data[day][human]['dead']
-            is_symptomatic = human_monitor_data[day][human]['n_symptoms'] > 0
-            is_infected = human_monitor_data[
-                day][human]['infection_timestamp'] is not None
-            # positive_test = human_monitor_data[day][human]['test_result']
+    #         human_name = human_monitor_data[day][human]['name']
+    #         is_in_hospital = human_monitor_data[day][human]['is_in_hospital']
+    #         is_in_ICU = human_monitor_data[day][human]['is_in_ICU']
+    #         is_dead = human_monitor_data[day][human]['dead']
+    #         is_symptomatic = human_monitor_data[day][human]['n_symptoms'] > 0
+    #         is_infected = human_monitor_data[
+    #             day][human]['infection_timestamp'] is not None
+    #         # positive_test = human_monitor_data[day][human]['test_result']
 
-            hospitalization_status[human_name][day] = is_in_hospital
-            ICU_status[human_name][day] = is_in_ICU
-            death_status[human_name][day] = is_dead
-            symptom_status[human_name][day] = is_symptomatic and is_infected
-            outpatient_status[human_name][day] = is_symptomatic \
-                and is_infected \
-                and not is_in_hospital \
-                and not is_in_ICU
-            has_had_infection[human_name][day] = is_infected
+    #         hospitalization_status[human_name][day] = is_in_hospital
+    #         ICU_status[human_name][day] = is_in_ICU
+    #         death_status[human_name][day] = is_dead
+    #         symptom_status[human_name][day] = is_symptomatic and is_infected
+    #         outpatient_status[human_name][day] = is_symptomatic \
+    #             and is_infected \
+    #             and not is_in_hospital \
+    #             and not is_in_ICU
+    #         has_had_infection[human_name][day] = is_infected
 
-    for human in human_names:
+    # for human in human_names:
 
-        days_in_hospital[human] = sum(hospitalization_status[human].values())
-        days_in_ICU[human] = sum(ICU_status[human].values())
-        has_died[human] = sum(death_status[human].values()) > 0
-        days_with_symptoms[human] = sum(symptom_status[human].values())
-        days_as_outpatient[human] = sum(outpatient_status[human].values())
-        was_infected[human] = sum(has_had_infection[human].values()) > 0
+    #     days_in_hospital[human] = sum(hospitalization_status[human].values())
+    #     days_in_ICU[human] = sum(ICU_status[human].values())
+    #     has_died[human] = sum(death_status[human].values()) > 0
+    #     days_with_symptoms[human] = sum(symptom_status[human].values())
+    #     days_as_outpatient[human] = sum(outpatient_status[human].values())
+    #     was_infected[human] = sum(has_had_infection[human].values()) > 0
+    days_in_hospital = human_monitor_data["days_in_hospital"]
+    days_in_ICU = human_monitor_data["days_in_ICU"]
+    has_died = human_monitor_data["has_died"]
+    days_with_symptoms = human_monitor_data["days_with_symptoms"]
+    days_as_outpatient = human_monitor_data["days_as_outpatient"]
+    was_infected = human_monitor_data["was_infected"]
 
     daly_df = pd.DataFrame([days_in_hospital,
                             days_in_ICU,
@@ -170,7 +176,7 @@ def get_daly_data(demographics,
 
     daly_df['life_expectancy'] = ""
     # set life expectancy as a function of age and sex
-    for human in human_names:
+    for human in was_infected.keys():
 
         daly_df.loc[human, 'life_expectancy'] = float(
             life_expectancies[
